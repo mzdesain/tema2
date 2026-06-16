@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rani & Fauzul - Tema Biru</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Menggunakan tag audio HTML standar daripada Tone.js -->
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#F5F7FA',     // Soft Icy White
+                        kraft: '#D0D9E4',     // Dusty Blue/Gray
+                        dark: '#1C2938',      // Deep Navy
+                        primary: '#3B597B',   // Steel Blue
+                        secondary: '#6B8299', // Slate Blue (Menggantikan warna cokelat/emas)
+                        accent: '#8A9BAE',    // Light Steel Gray
+                    },
+                    fontFamily: {
+                        sans: ['Lora', 'serif'],
+                        hand: ['Dancing Script', 'cursive'],
+                        arabic: ['Amiri', 'serif'],
+                    },
+                    boxShadow: {
+                        // Menyesuaikan warna bayangan dengan warna 'dark' yang baru (#1C2938)
+                        'paper': '6px 6px 0px 0px rgba(28, 41, 56, 1)',
+                        'paper-sm': '3px 3px 0px 0px rgba(28, 41, 56, 1)',
+                        'paper-hover': '2px 2px 0px 0px rgba(28, 41, 56, 1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F5F7FA;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23a)' opacity='0.06'/%3E%3C/svg%3E");
+            color: #1C2938;
+            overflow-x: hidden;
+        }
+
+        .paper-border { border: 2px solid #1C2938; }
+        .paper-border-dashed { border: 2px dashed #1C2938; }
+
+        /* Washi Tape (Selotip) - Disesuaikan dengan palet baru */
+        .washi-tape {
+            position: absolute; height: 25px; width: 100px;
+            background-color: rgba(107, 130, 153, 0.7); /* Secondary: Slate Blue */
+            backdrop-filter: blur(2px);
+            z-index: 10;
+            border-top: 1px dashed rgba(28, 41, 56, 0.3);
+            border-bottom: 1px dashed rgba(28, 41, 56, 0.3);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        /* Class name dipertahankan agar tidak mengubah struktur HTML, hanya warnanya diganti */
+        .washi-tape.pink { background-color: rgba(138, 155, 174, 0.6); } /* Accent: Light Steel */
+        .washi-tape.green { background-color: rgba(59, 89, 123, 0.6); } /* Primary: Steel Blue */
+
+        /* Paper Pin (Paku Payung) - Disesuaikan dengan primary baru */
+        .paper-pin {
+            position: absolute; width: 16px; height: 16px;
+            background-color: #3B597B; /* Primary color */
+            border-radius: 50%;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.4), inset -2px -2px 4px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        .paper-pin::after {
+            content: ''; position: absolute; width: 4px; height: 4px;
+            background-color: rgba(255,255,255,0.6); border-radius: 50%;
+            top: 3px; left: 3px;
+        }
+
+        .torn-edge-top {
+            clip-path: polygon(0% 10px, 5% 0px, 10% 10px, 15% 0px, 20% 10px, 25% 0px, 30% 10px, 35% 0px, 40% 10px, 45% 0px, 50% 10px, 55% 0px, 60% 10px, 65% 0px, 70% 10px, 75% 0px, 80% 10px, 85% 0px, 90% 10px, 95% 0px, 100% 10px, 100% 100%, 0% 100%);
+            padding-top: 20px;
+        }
+
+        .torn-edge-bottom {
+            clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 10px), 95% 100%, 90% calc(100% - 10px), 85% 100%, 80% calc(100% - 10px), 75% 100%, 70% calc(100% - 10px), 65% 100%, 60% calc(100% - 10px), 55% 100%, 50% calc(100% - 10px), 45% 100%, 40% calc(100% - 10px), 35% 100%, 30% calc(100% - 10px), 25% 100%, 20% calc(100% - 10px), 15% 100%, 10% calc(100% - 10px), 5% 100%, 0% calc(100% - 10px));
+            padding-bottom: 20px;
+        }
+
+        /* Animasi Melayang */
+        .float-anim { animation: float 6s ease-in-out infinite; }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(1deg); }
+            50% { transform: translateY(-10px) rotate(-1deg); }
+            100% { transform: translateY(0px) rotate(1deg); }
+        }
+
+        /* Animasi Cover Naik */
+        .slide-up {
+            transform: translateY(-100vh);
+            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        /* Musik Player Button */
+        #music-btn {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(59, 89, 123, 0.7); } /* Disesuaikan ke warna primary biru */
+            70% { box-shadow: 0 0 0 10px rgba(59, 89, 123, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 89, 123, 0); }
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            filter: blur(5px);
+            transform: translateY(60px);
+            transition: all 1s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0);
+        }
+
+        /* Bottom Nav Styles */
+        .nav-item.active {
+            color: #3B597B; /* primary color */
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-dark max-w-md mx-auto relative bg-gray-200 sm:border-x-4 border-dark min-h-screen shadow-2xl pb-16">
+
+    <!-- COVER UNDANGAN -->
+    <div id="cover-page" class="fixed inset-0 bg-kraft z-50 flex flex-col items-center justify-center p-6 max-w-md mx-auto border-x-4 border-dark" style="background-image: url('data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'a\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23a)\' opacity=\'0.1\'/%3E%3C/svg%3E'); transition: transform 1s ease-in-out;">
+        
+        <div class="bg-paper p-6 paper-border shadow-paper text-center relative w-full float-anim">
+            <div class="washi-tape pink" style="top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg);"></div>
+            
+            <p class="font-bold tracking-widest text-sm text-secondary mb-2 uppercase">The Wedding Of</p>
+            <h1 class="font-hand text-6xl text-dark mb-4">Rani & Fauzul</h1>
+            
+            <div class="my-6 border-y-2 border-dashed border-dark py-4">
+                <p class="text-sm font-bold mb-1">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
+                <div class="bg-white paper-border p-2 inline-block shadow-paper-sm transform rotate-1 mt-2 min-w-[200px]">
+                    <span id="guest-name" class="font-hand text-3xl font-bold text-primary">Tamu Undangan</span>
+                </div>
+            </div>
+            
+            <button onclick="bukaUndangan()" class="bg-primary text-white font-bold py-3 px-8 paper-border shadow-paper hover:translate-y-1 hover:shadow-paper-hover transition transform -rotate-1 flex items-center justify-center w-full mt-4">
+                <i class="fas fa-envelope-open-text mr-2"></i> Buka Undangan
+            </button>
+        </div>
+        
+        <p class="absolute bottom-5 text-sm font-bold text-dark bg-white px-3 py-1 paper-border shadow-paper-sm transform rotate-2">
+            Created with by Mz Digital
+        </p>
+    </div>
+
+    <!-- MAIN CONTENT (Sembunyi sebelum dibuka) -->
+    <div id="main-content" class="bg-paper min-h-screen pb-20 hidden opacity-0 transition-opacity duration-1000">
+        
+        <!-- Header Image -->
+        <div id="home" class="h-64 bg-secondary relative flex items-center justify-center overflow-hidden paper-border-dashed border-b-0 torn-edge-bottom z-10">
+            <!-- Placeholder background image (Warna disesuaikan dengan Secondary Slate Blue) -->
+            <img src="https://placehold.co/400x400/6B8299/ffffff?text=F+%26+R" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-multiply" alt="Couple">
+            <div class="relative z-10 text-center bg-white/80 backdrop-blur-sm p-4 paper-border shadow-paper transform rotate-2">
+                <div class="paper-pin" style="top: 5px; left: 50%; transform: translateX(-50%);"></div>
+                <h2 class="font-hand text-5xl text-dark mt-2">Rani & Fauzul</h2>
+                <p class="font-bold text-sm">21 Juni 2026</p>
+            </div>
+        </div>
+
+        <!-- Kutipan Islami -->
+        <section class="px-6 py-10 text-center relative z-0 -mt-5 reveal">
+            <img src="https://www.freepnglogos.com/uploads/bismillah-png/the-best-bismillah-vector-images-download-from-17.png" alt="Bismillah" class="h-10 mx-auto mb-6 opacity-80">
+            <p class="font-arabic text-2xl mb-4 text-dark">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً</p>
+            <p class="text-sm font-medium italic text-gray-700 bg-kraft p-4 paper-border shadow-paper-sm transform -rotate-1">
+                "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang."
+                <br><strong class="not-italic block mt-2 text-primary">— QS. Ar-Rum: 21 —</strong>
+            </p>
+        </section>
+
+        <!-- Profil Mempelai -->
+        <section id="couple" class="px-6 py-10 bg-kraft torn-edge-top torn-edge-bottom relative z-10">
+            <div class="washi-tape green" style="top: 0; right: 20px;"></div>
+            
+            <div class="text-center mb-8 reveal">
+                <h2 class="font-hand text-4xl font-bold bg-white inline-block px-4 py-1 paper-border shadow-paper-sm transform rotate-1">Sang Mempelai</h2>
+            </div>
+
+            <!-- Mempelai Pria -->
+            <div class="bg-white p-3 paper-border shadow-paper mb-10 transform -rotate-2 relative reveal">
+                <div class="paper-pin" style="top: 10px; left: 10px;"></div>
+                <div class="h-48 bg-gray-200 paper-border-dashed mb-4 overflow-hidden">
+                    <img src="Mempelai wanita.png" alt="Rani" class="w-full h-full object-cover grayscale">
+                </div>
+                <h3 class="font-hand text-4xl font-bold text-dark text-center">Rani Safitri</h3>
+                <p class="text-center text-sm font-bold text-primary mt-1">Anak dari Bpk. Fulan dan Ibu Fulanah</p>
+            </div>
+
+            <!-- Mempelai Wanita -->
+            <div class="bg-white p-3 paper-border shadow-paper transform rotate-2 relative reveal">
+                <div class="washi-tape pink" style="top: -10px; left: 50%; transform: translateX(-50%) rotate(3deg);"></div>
+                <div class="h-48 bg-gray-200 paper-border-dashed mb-4 overflow-hidden mt-2">
+                    <img src="Mempelai Pria.png" alt="Fauzul" class="w-full h-full object-cover grayscale">
+                </div>
+                <h3 class="font-hand text-4xl font-bold text-dark text-center">Fauzul Fikram</h3>
+                <p class="text-center text-sm font-bold text-secondary mt-1">Anak dari Bpk. Fulan dan Ibu Fulanah</p>
+            </div>
+        </section>
+
+        <!-- Jadwal & Lokasi -->
+        <section id="event" class="px-6 py-12 relative">
+            <div class="text-center mb-8 reveal">
+                <h2 class="font-hand text-4xl font-bold bg-accent text-dark inline-block px-4 py-1 paper-border shadow-paper-sm transform -rotate-1">Waktu & Tempat</h2>
+            </div>
+
+            <!-- Card Akad -->
+            <div class="bg-white p-5 paper-border shadow-paper mb-8 relative transform rotate-1 reveal">
+                <div class="washi-tape" style="top: -10px; right: -10px; transform: rotate(45deg); width: 60px;"></div>
+                <h3 class="font-hand text-3xl font-bold text-primary mb-4 border-b-2 border-dashed border-gray-300 pb-2">
+                    <i class="fas fa-handshake mr-2 text-xl"></i> Akad Nikah
+                </h3>
+                <div class="space-y-3 font-medium text-sm">
+                    <p><i class="far fa-calendar-check text-secondary w-6 text-center"></i> <strong>Minggu, 21 Juni 2026</strong></p>
+                    <p><i class="far fa-clock text-secondary w-6 text-center"></i> Ba'da Asar - Selesai</p>
+                    <p><i class="fas fa-map-marker-alt text-secondary w-6 text-center"></i> <strong>Masjid Darussobirin Giring</strong></p>
+                </div>
+                <a href="https://maps.google.com/?q=Masjid+Darussobirin+Giring" target="_blank" class="mt-4 block text-center bg-paper text-dark font-bold py-2 paper-border shadow-paper-sm hover:bg-gray-100 transition">
+                    Buka Google Maps
+                </a>
+            </div>
+
+            <!-- Card Resepsi -->
+            <div class="bg-white p-5 paper-border shadow-paper relative transform -rotate-1 reveal">
+                <div class="paper-pin" style="top: 15px; left: 50%; transform: translateX(-50%);"></div>
+                <h3 class="font-hand text-3xl font-bold text-secondary mb-4 border-b-2 border-dashed border-gray-300 pb-2 mt-2">
+                    <i class="fas fa-glass-cheers mr-2 text-xl"></i> Resepsi
+                </h3>
+                <div class="space-y-3 font-medium text-sm">
+                    <p><i class="far fa-calendar-check text-primary w-6 text-center"></i> <strong>Senin, 22 Juni 2026</strong></p>
+                    <p><i class="far fa-clock text-primary w-6 text-center"></i> 09.00 WITA - Selesai</p>
+                    <p><i class="fas fa-map-marker-alt text-primary w-6 text-center"></i> <strong>Dusun Giring, Desa Pendem, Kec. Janapria</strong></p>
+                </div>
+                <a href="https://maps.google.com/?q=Dusun+Giring+Desa+Pendem+Janapria" target="_blank" class="mt-4 block text-center bg-dark text-white font-bold py-2 paper-border shadow-paper-sm hover:opacity-90 transition">
+                    Buka Google Maps
+                </a>
+            </div>
+        </section>
+
+        <!-- Hitung Mundur -->
+        <section class="px-6 py-10 bg-secondary text-white torn-edge-top torn-edge-bottom relative reveal">
+            <div class="text-center mb-6">
+                <h2 class="font-hand text-4xl font-bold">Menuju Hari Bahagia</h2>
+            </div>
+            <div class="flex justify-center gap-3 text-center">
+                <div class="bg-white text-dark p-2 paper-border shadow-paper w-16 transform -rotate-2">
+                    <span id="hari" class="block text-2xl font-bold">00</span>
+                    <span class="text-xs font-bold">Hari</span>
+                </div>
+                <div class="bg-white text-dark p-2 paper-border shadow-paper w-16 transform rotate-1">
+                    <span id="jam" class="block text-2xl font-bold">00</span>
+                    <span class="text-xs font-bold">Jam</span>
+                </div>
+                <div class="bg-white text-dark p-2 paper-border shadow-paper w-16 transform -rotate-1">
+                    <span id="menit" class="block text-2xl font-bold">00</span>
+                    <span class="text-xs font-bold">Menit</span>
+                </div>
+                <div class="bg-white text-dark p-2 paper-border shadow-paper w-16 transform rotate-2">
+                    <span id="detik" class="block text-2xl font-bold">00</span>
+                    <span class="text-xs font-bold">Detik</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Adab Walimah -->
+        <section id="adab" class="px-6 py-12 bg-paper relative z-10 border-b-2 border-dashed border-dark">
+            <div class="text-center mb-8 reveal">
+                <h2 class="font-hand text-4xl font-bold bg-white inline-block px-4 py-1 paper-border shadow-paper-sm transform rotate-1">Adab Walimah</h2>
+                <p class="text-sm font-medium mt-4 bg-kraft p-3 paper-border shadow-paper-sm transform -rotate-1">
+                    Tanpa mengurangi rasa hormat, kami memohon agar para tamu undangan berkenan memperhatikan adab-adab berikut:
+                </p>
+            </div>
+
+            <div class="space-y-4 reveal">
+                <!-- Adab 1 -->
+                <div class="bg-white p-4 paper-border shadow-paper-sm transform -rotate-1 relative flex items-start gap-4">
+                    <div class="washi-tape green" style="top: -10px; right: -10px; transform: rotate(45deg); width: 40px;"></div>
+                    <div class="bg-secondary text-white w-10 h-10 flex items-center justify-center rounded-full flex-shrink-0 paper-border mt-1">
+                        <i class="fas fa-praying-hands text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-dark mb-1 font-hand text-2xl">Mendoakan Keberkahan</h4>
+                        <p class="text-xs font-medium text-gray-700 leading-relaxed">Mendoakan kebaikan bagi kedua mempelai: "Baarakallahu laka wa baarakaa 'alaika wa jama'a bainakumaa fii khoir."</p>
+                    </div>
+                </div>
+
+                <!-- Adab 2 -->
+                <div class="bg-white p-4 paper-border shadow-paper-sm transform rotate-1 relative flex items-start gap-4">
+                    <div class="paper-pin" style="top: 8px; left: 8px;"></div>
+                    <div class="bg-primary text-white w-10 h-10 flex items-center justify-center rounded-full flex-shrink-0 paper-border mt-1 ml-2">
+                        <i class="fas fa-tshirt text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-dark mb-1 font-hand text-2xl">Berpakaian Sopan</h4>
+                        <p class="text-xs font-medium text-gray-700 leading-relaxed">Mengenakan pakaian yang sopan, rapi, dan menutup aurat sesuai dengan syariat Islam.</p>
+                    </div>
+                </div>
+
+                <!-- Adab 3 -->
+                <div class="bg-white p-4 paper-border shadow-paper-sm transform -rotate-1 relative flex items-start gap-4">
+                     <div class="washi-tape pink" style="bottom: -10px; right: 20px; transform: rotate(-5deg); width: 50px;"></div>
+                    <div class="bg-accent text-dark w-10 h-10 flex items-center justify-center rounded-full flex-shrink-0 paper-border mt-1">
+                        <i class="fas fa-utensils text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-dark mb-1 font-hand text-2xl">Makan & Minum</h4>
+                        <p class="text-xs font-medium text-gray-700 leading-relaxed">Mengambil hidangan secukupnya, serta makan dan minum menggunakan tangan kanan dalam posisi duduk.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Amplop Digital -->
+        <section id="gift" class="px-6 py-12 relative bg-kraft">
+            <div class="washi-tape pink" style="top: -10px; left: 10px;"></div>
+            <div class="text-center mb-6 reveal">
+                <h2 class="font-hand text-4xl font-bold bg-white inline-block px-4 py-1 paper-border shadow-paper-sm transform rotate-1">Wedding Gift</h2>
+                <p class="text-sm font-medium mt-4 bg-paper p-3 paper-border shadow-paper-sm">
+                    Doa restu Anda merupakan karunia yang sangat berarti bagi kami. Namun jika Anda ingin memberikan tanda kasih, dapat melalui fitur di bawah ini:
+                </p>
+            </div>
+
+            <div class="bg-white p-5 paper-border shadow-paper text-center transform -rotate-1 relative reveal">
+                <div class="absolute -top-4 -right-4 bg-accent text-dark font-bold text-xs p-2 paper-border shadow-paper-sm transform rotate-12">
+                    E-Wallet
+                </div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Logo_dana_blue.svg/3840px-Logo_dana_blue.svg.png" alt="DANA" class="h-8 mx-auto mb-3">
+                <p class="font-bold text-xl tracking-widest mb-1">0838-4830-4149</p>
+                <p class="text-sm text-gray-600 mb-4 font-medium">a.n. Rani Safitri / Fauzul</p>
+                
+                <button onclick="salinRekening('083848304149')" class="bg-gray-200 text-dark font-bold py-2 px-4 paper-border shadow-paper-sm hover:bg-primary hover:text-white transition w-full">
+                    <i class="fas fa-copy mr-1"></i> Salin Nomor DANA
+                </button>
+            </div>
+        </section>
+
+        <!-- RSVP & Ucapan -->
+        <section id="rsvp" class="px-6 py-12 bg-paper">
+            <div class="text-center mb-6 reveal">
+                <h2 class="font-hand text-4xl font-bold bg-accent inline-block px-4 py-1 paper-border shadow-paper-sm transform -rotate-2">Buku Tamu</h2>
+            </div>
+
+            <form id="rsvp-form" class="bg-white p-5 paper-border shadow-paper mb-8 relative reveal" onsubmit="kirimUcapan(event)">
+                <div class="paper-pin" style="top: -8px; left: 50%; transform: translateX(-50%);"></div>
+                
+                <div class="mb-4 mt-2">
+                    <label class="block text-sm font-bold mb-1">Nama Anda</label>
+                    <input type="text" id="namaPengirim" name="nama" class="w-full bg-paper paper-border p-2 focus:outline-none focus:ring-2 ring-primary" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-bold mb-1">Pesan & Doa</label>
+                    <textarea id="pesanDoa" name="pesan" rows="3" class="w-full bg-paper paper-border p-2 focus:outline-none focus:ring-2 ring-primary" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-bold mb-1">Kehadiran</label>
+                    <select id="statusKehadiran" name="kehadiran" class="w-full bg-paper paper-border p-2 focus:outline-none">
+                        <option value="Hadir">Hadir</option>
+                        <option value="Maaf, Tidak Bisa Hadir">Maaf, Tidak Bisa Hadir</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-bold mb-1">Jumlah Tamu</label>
+                    <select id="jumlahTamu" name="guests" class="w-full bg-paper paper-border p-2 focus:outline-none">
+                        <option value="1">1 Orang</option>
+                        <option value="2">2 Orang</option>
+                        <option value="3">3 Orang</option>
+                        <option value="4">4 Orang</option>
+                    </select>
+                </div>
+                <button id="btn-submit-rsvp" type="submit" class="w-full bg-primary text-white font-bold py-3 paper-border shadow-paper-sm hover:translate-y-1 transition transform rotate-1">
+                    Kirim Ucapan
+                </button>
+            </form>
+
+            <!-- List Ucapan -->
+            <div id="daftar-ucapan" class="space-y-4 max-h-80 overflow-y-auto p-2 reveal">
+                <div class="text-center text-sm text-gray-500 py-4" id="loading-ucapan">
+                    <i class="fas fa-spinner fa-spin mr-2"></i> Memuat daftar ucapan...
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center py-10 bg-dark text-paper border-t-4 border-dashed border-paper/50">
+            <h2 class="font-hand text-4xl mb-2">Terima Kasih</h2>
+            <p class="text-sm font-medium mb-6">Atas doa & restu Bapak/Ibu/Saudara/i</p>
+            <p class="font-hand text-2xl text-accent">Rani & Fauzul</p>
+            
+            <div class="mt-8 pt-4 border-t border-paper/20">
+                <p class="text-xs font-medium">Desain Undangan Digital oleh</p>
+                <a href="https://mzdigitall.vercel.app/" class="font-hand text-2xl font-bold text-paper inline-block mt-1">
+                    Mz<span class="text-primary">Digital</span>
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Audio Element (Ganti src dengan path file musik Anda) -->
+    <audio id="bg-music" loop>
+        <source src="weddingnasheed.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Floating Music Button -->
+    <button id="music-btn" onclick="toggleMusic()" class="fixed bottom-24 right-6 w-12 h-12 bg-primary text-white rounded-full paper-border shadow-paper z-[55] flex items-center justify-center hidden">
+        <i id="music-icon" class="fas fa-compact-disc animate-spin"></i>
+    </button>
+
+    <!-- Bottom Navigation -->
+    <nav id="bottom-nav" class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-white paper-border-dashed border-b-0 py-3 px-6 z-50 flex justify-between items-center shadow-[0_-5px_15px_rgba(0,0,0,0.1)] hidden transition-all duration-500">
+        <a href="#home" class="nav-item flex flex-col items-center text-gray-500 hover:text-primary transition-colors" data-target="home">
+            <i class="fas fa-home text-xl mb-1"></i>
+            <span class="text-[10px] font-bold">Home</span>
+        </a>
+        <a href="#couple" class="nav-item flex flex-col items-center text-gray-500 hover:text-primary transition-colors" data-target="couple">
+            <i class="fas fa-heart text-xl mb-1"></i>
+            <span class="text-[10px] font-bold">Couple</span>
+        </a>
+        <a href="#event" class="nav-item flex flex-col items-center text-gray-500 hover:text-primary transition-colors" data-target="event">
+            <i class="far fa-calendar-alt text-xl mb-1"></i>
+            <span class="text-[10px] font-bold">Event</span>
+        </a>
+        <a href="#gift" class="nav-item flex flex-col items-center text-gray-500 hover:text-primary transition-colors" data-target="gift">
+            <i class="fas fa-gift text-xl mb-1"></i>
+            <span class="text-[10px] font-bold">Gift</span>
+        </a>
+        <a href="#rsvp" class="nav-item flex flex-col items-center text-gray-500 hover:text-primary transition-colors" data-target="rsvp">
+            <i class="fas fa-book-open text-xl mb-1"></i>
+            <span class="text-[10px] font-bold">RSVP</span>
+        </a>
+    </nav>
+
+    <!-- Custom Alert/Toast Box -->
+    <div id="toast" class="fixed top-10 left-1/2 transform -translate-x-1/2 -translate-y-32 bg-white text-dark font-bold px-6 py-3 paper-border shadow-paper z-[60] transition-transform duration-300 flex items-center gap-2">
+        <i class="fas fa-check-circle text-secondary"></i>
+        <span id="toast-msg">Pesan</span>
+    </div>
+
+    <script>
+        // 1. Ambil Nama Tamu dari URL (?to=Nama+Tamu)
+        const urlParams = new URLSearchParams(window.location.search);
+        const to = urlParams.get('to');
+        if (to) {
+            document.getElementById('guest-name').innerText = to;
+            document.getElementById('namaPengirim').value = to; // Auto isi form
+        }
+
+        // 2. Buka Undangan Animasi & Play Musik
+        function bukaUndangan() {
+            // Sembunyikan cover
+            document.getElementById('cover-page').classList.add('slide-up');
+            
+            // Tampilkan isi
+            const mainContent = document.getElementById('main-content');
+            mainContent.classList.remove('hidden');
+            // Sedikit delay untuk animasi opacity
+            setTimeout(() => {
+                mainContent.classList.remove('opacity-0');
+            }, 100);
+
+            // Tampilkan tombol musik dan bottom nav
+            document.getElementById('music-btn').classList.remove('hidden');
+            document.getElementById('bottom-nav').classList.remove('hidden');
+            
+            // Play musik otomatis saat undangan dibuka
+            const music = document.getElementById('bg-music');
+            music.play().then(() => {
+                isPlaying = true;
+                const icon = document.getElementById('music-icon');
+                icon.className = "fas fa-compact-disc animate-spin";
+                document.getElementById('music-btn').style.animation = "pulse 2s infinite";
+            }).catch(error => {
+                console.log("Autoplay dicegah oleh browser (Interaksi tambahan dibutuhkan).");
+            });
+
+            // Memuat daftar ucapan dari Spreadsheet saat undangan dibuka
+            loadUcapan();
+        }
+
+        // 3. Kontrol Musik (Audio Tag)
+        let isPlaying = false;
+        function toggleMusic() {
+            const music = document.getElementById('bg-music');
+            const icon = document.getElementById('music-icon');
+            
+            if(isPlaying) {
+                music.pause();
+                icon.classList.remove('animate-spin');
+                icon.className = "fas fa-play";
+                document.getElementById('music-btn').style.animation = "none";
+            } else {
+                music.play();
+                icon.className = "fas fa-compact-disc animate-spin";
+                document.getElementById('music-btn').style.animation = "pulse 2s infinite";
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // 4. Hitung Mundur (Target: 22 Juni 2026, 09:00:00)
+        const targetDate = new Date("June 22, 2026 09:00:00").getTime();
+        
+        const timer = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            
+            if (distance < 0) {
+                clearInterval(timer);
+                document.getElementById("hari").innerText = "00";
+                document.getElementById("jam").innerText = "00";
+                document.getElementById("menit").innerText = "00";
+                document.getElementById("detik").innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById("hari").innerText = days.toString().padStart(2, '0');
+            document.getElementById("jam").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("menit").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("detik").innerText = seconds.toString().padStart(2, '0');
+        }, 1000);
+
+        // 5. Salin Rekening & Toast Notifikasi
+        function salinRekening(text) {
+            const tempInput = document.createElement("input");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            showToast("Nomor DANA berhasil disalin!");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = message;
+            toast.classList.remove('-translate-y-32');
+            setTimeout(() => {
+                toast.classList.add('-translate-y-32');
+            }, 3000);
+        }
+
+        // 6. Form RSVP Terhubung ke Google Spreadsheet (Apps Script)
+        // --- PENTING: GANTI URL DI BAWAH INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA ---
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwFYSGJ7xEkfOFhJyU_KsBHuFX6bJ6KeLLb87ajqy-A3abWZv9bqUUik6TYshycGnfsOA/exec';
+
+        function kirimUcapan(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-rsvp');
+            const originalBtnText = btn.innerText;
+            
+            const nama = document.getElementById('namaPengirim').value;
+            const pesan = document.getElementById('pesanDoa').value;
+            const select = document.getElementById('statusKehadiran').value;
+            const guests = document.getElementById('jumlahTamu').value;
+            
+            // Ubah teks tombol menjadi loading
+            btn.innerText = 'Mengirim...';
+            btn.disabled = true;
+
+            // (Hanya untuk preview jika URL belum diganti)
+            if(!scriptURL.startsWith('http')) {
+                setTimeout(() => updateUIRsvp(btn, originalBtnText), 1000);
+                return;
+            }
+
+            // Proses kirim menggunakan format JSON sesuai doPost Apps Script Anda
+            const payload = {
+                name: nama,
+                message: pesan,
+                attendance: select,
+                guests: guests
+            };
+
+            // Gunakan text/plain dengan stringify agar ditangkap sebagai e.postData.contents
+            fetch(scriptURL, { 
+                method: 'POST',
+                mode: 'no-cors', // Penting agar tidak kena blokir CORS policy
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                updateUIRsvp(btn, originalBtnText);
+                // Muat ulang daftar ucapan untuk menampilkan data terbaru
+                setTimeout(loadUcapan, 1500); 
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                btn.innerText = originalBtnText;
+                btn.disabled = false;
+                showToast("Gagal mengirim pesan. Silakan coba lagi.");
+            });
+        }
+
+        // Fungsi Bantuan Update UI RSVP
+        function updateUIRsvp(btn, originalBtnText) {
+            document.getElementById('rsvp-form').reset();
+            btn.innerText = originalBtnText;
+            btn.disabled = false;
+            showToast("Terima kasih atas ucapan Anda!");
+        }
+
+        // Fungsi Load Ucapan (Sesuai doGet Apps Script Anda)
+        function loadUcapan() {
+            if(!scriptURL.startsWith('http')) {
+                document.getElementById('daftar-ucapan').innerHTML = `
+                    <div class="bg-kraft p-3 paper-border-dashed transform rotate-1">
+                        <p class="font-bold text-sm">Mz Digital <span class="text-xs font-normal text-gray-600 bg-white px-1 ml-1 border border-dark">Hadir</span></p>
+                        <p class="text-sm mt-1">Data belum bisa dimuat. Silakan ganti scriptURL dengan link Apps Script Anda terlebih dahulu.</p>
+                    </div>`;
+                return;
+            }
+
+            fetch(scriptURL)
+                .then(response => response.json())
+                .then(data => {
+                    const daftar = document.getElementById('daftar-ucapan');
+                    daftar.innerHTML = ''; 
+                    
+                    // Membalik urutan agar yang terbaru tampil di atas
+                    data.reverse().forEach(item => {
+                        const badgeClass = item.attendance === 'Hadir' ? 'bg-secondary text-white' : 'bg-gray-400 text-white';
+                        const newHtml = `
+                            <div class="bg-white p-3 paper-border-dashed transform ${Math.random() > 0.5 ? 'rotate-1' : '-rotate-1'} transition mb-3">
+                                <p class="font-bold text-sm text-dark">${item.name} <span class="text-xs font-normal ${badgeClass} px-1 ml-1 border border-dark">${item.attendance}</span></p>
+                                <p class="text-sm mt-1">${item.message}</p>
+                                <p class="text-[10px] text-gray-500 mt-2">
+                                    ${new Date(item.timestamp).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})} • ${item.guests} Tamu
+                                </p>
+                            </div>
+                        `;
+                        daftar.insertAdjacentHTML('beforeend', newHtml);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    document.getElementById('daftar-ucapan').innerHTML = '<p class="text-center text-sm text-red-500">Gagal memuat daftar ucapan.</p>';
+                });
+        }
+
+        // 7. Scroll Animations (Intersection Observer)
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 50; // Mengurangi threshold dari 100 menjadi 50 agar animasi muncul lebih awal
+
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        // Panggil sekali untuk elemen yang sudah ada di viewport saat load
+        reveal();
+
+        // 8. Bottom Navigation Active State
+        const sections = document.querySelectorAll("section[id], div[id='home']");
+        const navItems = document.querySelectorAll(".nav-item");
+
+        window.addEventListener("scroll", () => {
+            let current = "";
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - sectionHeight / 3) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            navItems.forEach((li) => {
+                li.classList.remove("active");
+                if (li.dataset.target === current) {
+                    li.classList.add("active");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
